@@ -1,4 +1,4 @@
-from aes.base import clock, elapsed_time, CONF
+from pyes.base import clock, elapsed_time, CONF
 
 class stats:
   """Class statistics"""

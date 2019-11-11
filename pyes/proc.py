@@ -1,8 +1,8 @@
 """
 Process objects - resource, queue
 """
-import aes.base
-import aes.stats
+import pyes.base
+import pyes.stats
 
 class queue:
   """Class queue"""
@@ -15,7 +15,7 @@ class queue:
     self.__type = typ.lower()
     # Statistics
     if stats:
-      self.__stats = aes.stats.stats()
+      self.__stats = pyes.stats.stats()
     else:
       self.__stats = None
   
@@ -95,7 +95,7 @@ class resource:
     self.__capacity = b
     # Statistics
     if stats:
-      self.__stats = aes.stats.stats()
+      self.__stats = pyes.stats.stats()
     else:
       self.__stats = None
 
