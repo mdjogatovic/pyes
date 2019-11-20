@@ -1,14 +1,30 @@
 #! /usr/bin/python3
 
+## # PYES - PYthon Event Scheduling simulation library
+##
+## Easy to use Python simulation library based on event scheduling strategy.
+##
+## Author: Marko S. Djogatovic
+##
+## Licence: MIT
+##
+## ## Installation
+## python setup.py install
+##
+## ## Requirements
+## 1. Python >= 3.6
+
+
 """
-----------------------------------------------------------------------------------------
----------------------------------  Bank model  -----------------------------------------
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+------------------------------------  Bank model  ------------------------------------------
+--------------------------------------------------------------------------------------------
  A bank employs four tellers to serve its customers. Interarrival time of the customers
- is exponetialy distributed with the mean time of 2 minutes. Also, the service time is
- exponentialy distributed with the mean time of 3 min. Consider the four tellers as the
- one resource with the one joint queue. The bank opening ours are from 9 AM to 4 PM.
-----------------------------------------------------------------------------------------"""
+ is exponentially distributed with the average time of 2 minutes. Also, the service time is
+ exponentially distributed with the average time of 3 min. Consider the four tellers as the
+ one resource with the one joint queue. The bank opening hours are from 9 AM to 4 PM.
+ Simulate this system for three working days.
+--------------------------------------------------------------------------------------------"""
     
 from pyes.base import simulation
 from pyes.base import elapsed_time, start_time, time_unit, print_time
@@ -18,13 +34,8 @@ from pyes.util import rn1, rn2
 from pyes.util import second, minute, hour
 from datetime import datetime
 
-# Print text of the example
-print(__doc__)
-
 # Print simulation time
-print_time(False)
-# Start date
-start_time(datetime(2018,1,1,8))
+print_time(True)
 # Model time unit
 time_unit(second)
 
@@ -83,7 +94,7 @@ def service():
     # Schedule event of user departure
     yield departure(usr),rn2.exponential(service.TIME)*minute
 # Service time
-service.TIME = 3 # min
+service.TIME = 3.0 # min
 
 ## Event departure - unconditional event
 def departure(usr):
@@ -99,20 +110,43 @@ def terminate():
 # Simulation time
 terminate.TIME = 8.0 # hour
 
+def simulation_of_a_day(sim):
+  ## Set start time for the simulation
+  start_time(datetime(2018,11,simulation_of_a_day.DAY,8))    
+  ## Simulation
+  # Execute simulation
+  sim.start(init)
+  # Finishing statistics
+  que.stats.finish()
+  teller.stats.finish()
+  # Printing results
+  results()
+  print(t)
+  # Clear statistics from previous simulation
+  que.clear()
+  teller.clear()
+  # Clear events from the model
+  sim.clear()
+  # Next day
+  simulation_of_a_day.DAY += 1
+# Day
+simulation_of_a_day.DAY = 5
+
+# Print text of the example
+print(__doc__)
+  
 # Timer object
 t = timer()
 # Start timer
 t.tic()
-# Execute simulation
-simulation().start(init)
+sim = simulation()
+# Day 1
+simulation_of_a_day(sim)
+# Day 2
+simulation_of_a_day(sim)
+# Day 3
+simulation_of_a_day(sim)
 # End timer
 t.toc()
 
-# Finishing statistics
-que.stats.finish()
-teller.stats.finish()
-
-# Printing results
-results()
-print(t)
 input()

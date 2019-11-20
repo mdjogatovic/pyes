@@ -21,7 +21,7 @@ import operator
 CONF = {"start_time":0.0,"time_unit":1.0,"print_time":False}
 
 # Simulation clock 
-CLOCK = 0.0
+CLOCK = None
 
 def clock():
   """Return simulation clock"""
@@ -33,6 +33,7 @@ def elapsed_time():
 
 def start_time(val):
   """Set start time"""
+  global CLOCK
   if not isinstance(val,datetime.datetime):
     raise TypeError("datetime object is expected")
   CONF["start_time"] = val
@@ -54,13 +55,11 @@ class simulation:
 
   def __init__(self):
     """Simulation class c-tor"""
-    global CLOCK
     # Stop flag
     self.__stop = False
     # Future event chain
     self.__fec = []
-    # Initialization of start time
-    CLOCK = CONF["start_time"]
+
 
   def __execute(self,ge):
     """Executing event action"""
@@ -96,6 +95,9 @@ class simulation:
   def start(self,init_event):
     """Start simulation"""
     global CLOCK
+    # Initialization of start time
+    if not CLOCK:
+      CLOCK = CONF["start_time"]
     # Execute initial event
     self.__execute(init_event())
     # Stop flag is false
@@ -116,15 +118,22 @@ class simulation:
       # Phase B: Execute event action
       self.__execute(event)
 
+  def reset(self):
+    """Reset simulation clock"""
+    global CLOCK
+    # Reset advance time of the events
+    for i, e in enumerate(self.__fec):
+      td = e[1] - CLOCK
+      self.__fec[i] = (e[0],CONF["start_time"]+td,e[2])
+    # Reset simulation clock
+    CLOCK = None
+
   def clear(self):
-    """Clear all events from simulation"""
+    """Clear all events from simulation and reset simulation time"""
+    global CLOCK
     # Clear FEC
     self.__fec.clear()
-
-  def reset(self):
-    """Reset simulation time"""
-    global CLOCK
-    CLOCK = CONF["start_time"]
+    CLOCK = None
   
   @staticmethod
   def stop():

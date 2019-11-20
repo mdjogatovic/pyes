@@ -63,7 +63,7 @@ class queue:
     return a
   
   def __len__(self):
-    """Return length of queue"""
+    """Return length of the queue"""
     return len(self.__que)
 
   def __bool__(self):
@@ -71,14 +71,15 @@ class queue:
     return self.__que!=[]
 
   def clear(self):
-    """Clear content of queue"""
+    """Clear contents of the queue"""
     self.__que.clear()
     if self.__stats:
       self.__stats.clear()
 
   def reset(self):
+    """Reset queue statistics"""
     if self.__stats:
-      self.__stats.clear()    
+      self.__stats.reset()
 
   @property
   def stats(self):
@@ -114,7 +115,7 @@ class resource:
       self.__stats = None
 
   def seize(self,a=None,n=1):
-    """Seize item in resource"""
+    """Seize item in the resource"""
     if not isinstance(n,int):
       raise ValueError("resource.seize - int is expected")
     if self.__num+n<=self.__capacity:
@@ -127,7 +128,7 @@ class resource:
       self.__stats.start(a,n)
   
   def release(self,a=None,n=1):
-    """Release item in resource"""
+    """Release item in the resource"""
     if not isinstance(n,int):
       raise ValueError("resource.release - int is expected")
     if self.__num-n>=0:
@@ -140,7 +141,7 @@ class resource:
       self.__stats.stop(a,n)
 
   def __bool__(self):
-    """Availability of resource"""
+    """Availability of the resource"""
     return self.__num<self.__capacity
 
   def clear(self):
@@ -148,6 +149,11 @@ class resource:
     self.__num = 0
     if self.__stats:
       self.__stats.clear()
+
+  def reset(self):
+    """Reset statistics"""
+    if self.__stats:
+      self.__stats.reset()
 
   @property
   def stats(self):
