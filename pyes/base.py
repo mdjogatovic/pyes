@@ -126,13 +126,14 @@ class simulation:
       td = e[1] - CLOCK
       self.__fec[i] = (e[0],CONF["start_time"]+td,e[2])
     # Reset simulation clock
-    CLOCK = None
+    CLOCK = CONF["start_time"]
 
   def clear(self):
     """Clear all events from simulation and reset simulation time"""
     global CLOCK
     # Clear FEC
     self.__fec.clear()
+    # Reset simulation clock
     CLOCK = None
   
   @staticmethod
