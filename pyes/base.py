@@ -133,7 +133,7 @@ class simulation:
     global CLOCK
     # Clear FEC
     self.__fec.clear()
-    # Reset simulation clock
+    # Clear simulation clock
     CLOCK = None
   
   @staticmethod
