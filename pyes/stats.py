@@ -1,21 +1,4 @@
-"""
-# PYES - PYthon Event Scheduling simulation library
-
-Easy to use Python simulation library based on event scheduling strategy.
-
-Author: Marko S. Djogatovic
-
-Licence: MIT
-
-## Installation
-python setup.py install
-
-## Requirements
-1. Python >= 3.6
-
-Statistics
-"""
-from pyes.base import clock, elapsed_time, CONF, CLOCK
+from pyes.base import clock, elapsed_time, CONF
 
 class stats:
   """Class statistics"""
@@ -34,7 +17,7 @@ class stats:
     # 'number of agents' x 'waiting time'
     self.__area = 0.0
     # Moment of last state change
-    self.__prev_ti = None
+    self.__prev_ti = CONF["start_time"]
     # Dictonary of agents and their entry times
     self.__memory = {}
 
@@ -42,9 +25,6 @@ class stats:
     if not isinstance(n,int):
       raise ValueError("stats.start - int is expected")
 
-    # Initialization of the time of previos change 
-    if not self.__prev_ti:
-      self.__prev_ti = CONF["start_time"]
     # Number of calls
     self.__count+=1
     # Area
@@ -62,10 +42,6 @@ class stats:
     if not isinstance(n,int):
       raise ValueError("stats.stop - int is expected")
 
-    # Initialization of the time of previos change 
-    if not self.__prev_ti:
-      self.__prev_ti = CONF["start_time"]
-
     if a in self.__memory:
       dt = (clock()-self.__memory[a])/CONF["time_unit"]
       # Ukoliko je vreme koje je transakcija provela u redu 0
@@ -76,7 +52,6 @@ class stats:
       self.__total_time += dt
       # Calculate area
       self.__area += self.__size*((clock() - self.__prev_ti)/CONF["time_unit"])
-      CLOCK
       # Reduce current number of transactions
       self.__size -= n
       # Remember moment of last state change
@@ -89,31 +64,21 @@ class stats:
     for mt in self.__memory.values():
       self.__total_time += (clock()-mt)/CONF["time_unit"]
     self.__area += self.__size*((clock()-self.__prev_ti)/CONF["time_unit"])
- 
+  
   def reset(self):
     """Reset statistics"""
     self.__count      = 0
-    #self.__size       = 0
+    self.__size       = 0
     self.__max_size   = 0
     self.__count_zw   = 0
     self.__total_time = 0.0
     self.__area       = 0.0
-    self.__prev_ti    = CONF["start_time"]
-    for a in self.__memory:
-      self.__memory[a] = CONF["start_time"]
-   
+
   def clear(self):
     """Clear statistics"""
-    #self.__size    = 0
-    #self.__count      = 0
-    #self.__size       = 0
-    #self.__max_size   = 0
-    #self.__count_zw   = 0
-    #self.__total_time = 0.0
-    #self.__area       = 0.0
-    #self.__prev_ti = CONF["start_time"]
-    #self.__memory.clear()
-    self.__init__()
+    self.__size    = 0
+    self.__prev_ti = CONF["start_time"]
+    self.__memory.clear()
   
   @property
   def count(self):
