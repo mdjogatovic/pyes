@@ -14,6 +14,8 @@ V. Radonjic Djogatovic, M. Djogatovic, "A Novel Simulation Model for Pricing Dif
 3. Change directory in the terminal to the unpacked directory.
 4. Type `pip install .`.
 
+Optionally, to install Matplotlib type in terminal `pip install -r optional-requirements.txt`.
+
 To uninstall library type in terminal `pip uninstall pyes`.
 
 
