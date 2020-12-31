@@ -43,7 +43,6 @@ from pyes.base import clock, elapsed_time
 from pyes.proc import queue, resource
 from pyes.util import rn1, rn2, rn3, rn4
 from pyes.util import timer, histogram
-from matplotlib import pyplot as plt
 
 ## Class vehicle
 class vehicle:

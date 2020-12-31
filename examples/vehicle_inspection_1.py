@@ -42,7 +42,6 @@ from pyes.proc import queue, resource
 from pyes.util import rn1, rn2, rn3, rn4
 from pyes.util import timer, histogram, minute, hour
 from datetime import datetime
-from matplotlib import pyplot as plt
 
 time_unit(0.1*minute)
 
