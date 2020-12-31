@@ -20,6 +20,9 @@ import operator
 # Configuration object
 CONF = {"start_time":0.0,"time_unit":1.0,"print_time":False}
 
+# Start time
+ST   = datetime.datetime(1970,1,1,8)
+
 # Simulation clock 
 CLOCK = None
 
@@ -31,18 +34,24 @@ def elapsed_time():
   """Return elapsed time"""
   return (CLOCK-CONF["start_time"])/CONF["time_unit"]
 
-def start_time(val):
-  """Set start time"""
-  global CLOCK
-  if not isinstance(val,datetime.datetime):
-    raise TypeError("datetime object is expected")
-  CONF["start_time"] = val
+def start_time(val=None):
+  """Set or get start time"""
+  global CONF
+  if val:
+    if not isinstance(val,datetime.datetime):
+      raise TypeError("datetime object is expected")
+    CONF["start_time"] = val
+  else:
+    return CONF["start_time"]
 
-def time_unit(val):
-  """Set time unit"""
-  if not isinstance(val,datetime.timedelta):
-    raise TypeError("timedelta object is expected")
-  CONF["time_unit"] = val  
+def time_unit(val=None):
+  """Set or get time unit"""
+  if val:
+    if not isinstance(val,datetime.timedelta):
+      raise TypeError("timedelta object is expected")
+    CONF["time_unit"] = val  
+  else:
+    return CONF["time_unit"]
 
 def print_time(val):
   """Set print time"""
@@ -63,27 +72,28 @@ class simulation:
 
   def __execute(self,ge):
     """Executing event action"""
-    for e in ge:
-      if e == (None,CLOCK,-1):
-        self.__stop = True
-      else:
-        if not isinstance(e,tuple):
-          e1 = (e,CLOCK,10)
-        elif len(e)==2:
-          if not isinstance(e[1],datetime.timedelta) and not isinstance(e[1],datetime.datetime):
-            e1 = (e[0],CLOCK+e[1]*CONF["time_unit"],10)
-          elif isinstance(e[1],datetime.datetime):
-            e1 = (e[0],e[1],1)
-          else:
-            e1 = (e[0],CLOCK+e[1],10)
+    if ge:
+      for e in ge:
+        if e == (None,CLOCK,-1):
+          self.__stop = True
         else:
-          if not isinstance(e[1],datetime.timedelta) and not isinstance(e[1],datetime.datetime):
-            e1 = (e[0],CLOCK+e[1]*CONF["time_unit"],e[2])
-          elif isinstance(e[1],datetime.datetime):
-            e1 = (e[0],e[1],e[2])
+          if not isinstance(e,tuple):
+            e1 = (e,CLOCK,10)
+          elif len(e)==2:
+            if not isinstance(e[1],datetime.timedelta) and not isinstance(e[1],datetime.datetime):
+              e1 = (e[0],CLOCK+e[1]*CONF["time_unit"],10)
+            elif isinstance(e[1],datetime.datetime):
+              e1 = (e[0],e[1],1)
+            else:
+              e1 = (e[0],CLOCK+e[1],10)
           else:
-            e1 = (e[0],CLOCK+e[1],e[2])
-        self.__schedule(e1)
+            if not isinstance(e[1],datetime.timedelta) and not isinstance(e[1],datetime.datetime):
+              e1 = (e[0],CLOCK+e[1]*CONF["time_unit"],e[2])
+            elif isinstance(e[1],datetime.datetime):
+              e1 = (e[0],e[1],e[2])
+            else:
+              e1 = (e[0],CLOCK+e[1],e[2])
+          self.__schedule(e1)
 
   def __schedule(self,e):
     """Scheduling event"""
@@ -92,11 +102,13 @@ class simulation:
     # FEC sorting
     self.__fec.sort(key = operator.itemgetter(1,2)) #lambda ev:(ev[1],e[2]))
 
-  def start(self,init_event):
+  def start(self,init_event,end_time=None):
     """Start simulation"""
     global CLOCK
     # Initialization of start time
     if not CLOCK:
+      if isinstance(CONF['time_unit'],datetime.timedelta) and CONF["start_time"]==0.0:
+        CONF["start_time"] = ST
       CLOCK = CONF["start_time"]
     # Execute initial event
     self.__execute(init_event())
@@ -140,3 +152,8 @@ class simulation:
   def stop():
     """Terminate simulation"""
     return None,CLOCK,-1
+
+  @staticmethod
+  def void():
+    """Terminate simulation"""
+    return None,CLOCK,-2

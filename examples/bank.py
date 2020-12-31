@@ -16,15 +16,16 @@
 
 
 """
---------------------------------------------------------------------------------------------
-------------------------------------  Bank model  ------------------------------------------
---------------------------------------------------------------------------------------------
- A bank employs four tellers to serve its customers. Interarrival time of the customers
- is exponentially distributed with the average time of 2 minutes. Also, the service time is
- exponentially distributed with the average time of 3 min. Consider the four tellers as the
- one resource with the one joint queue. The bank opening hours are from 9 AM to 4 PM.
- Simulate this system for three working days.
---------------------------------------------------------------------------------------------"""
+--------------------------------------------------------------------------------
+--------------------------------  Bank model  ----------------------------------
+--------------------------------------------------------------------------------
+A bank employs four tellers to serve its customers. Interarrival time of the 
+customers is exponentially distributed with the average time of 2 minutes. 
+Also, the service time is exponentially distributed with the average time of 
+3 min. Consider the four tellers as the one resource with the one joint queue. 
+The bank opening hours are from 9 AM to 5 PM. Simulate this system for three 
+working days.
+--------------------------------------------------------------------------------"""
     
 from pyes.base import simulation
 from pyes.base import elapsed_time, start_time, time_unit, print_time
@@ -83,7 +84,7 @@ def arrival(usr):
 # Interrival time
 arrival.TIME = 2.0 # min
 
-## Event service - unconditional event
+## Event service - conditional event
 def service():
   # If resource is available and queue is not empty
   if teller and que:
@@ -149,4 +150,4 @@ simulation_of_a_day(sim)
 # End timer
 t.toc()
 
-input()
+input("Press ENTER to continue...")
