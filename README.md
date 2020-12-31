@@ -1,6 +1,6 @@
 # PYES - PYthon Event Scheduling simulation library
 
-Easy to use Python simulation library based on event scheduling strategy.
+Easy to use Python simulation library based on the event scheduling strategy.
 
 Author: Marko S. Djogatovic
 

@@ -153,7 +153,3 @@ class simulation:
     """Terminate simulation"""
     return None,CLOCK,-1
 
-  @staticmethod
-  def void():
-    """Terminate simulation"""
-    return None,CLOCK,-2
